@@ -1,5 +1,5 @@
 import { Card } from '@components/ui'
-import { DashboardStatsDto } from '@types/index'
+import { DashboardStatsDto } from '@/types'
 import { Skeleton } from '@components/ui'
 
 interface StatsCardsProps {

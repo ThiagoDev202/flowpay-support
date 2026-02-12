@@ -115,6 +115,8 @@ npm run start:prod        # Executar versão compilada
 
 # Testes
 npm run test              # Executar testes unitários
+npm run test:unit         # Testes unitários em test/unit
+npm run test:integration  # Testes de integração (WebSocket/API)
 npm run test:watch        # Testes em modo watch
 npm run test:cov          # Testes com coverage
 npm run test:e2e          # Testes end-to-end
@@ -127,6 +129,7 @@ npm run format            # Prettier
 npm run prisma:generate   # Gerar Prisma Client
 npm run prisma:migrate    # Executar migrations
 npm run prisma:seed       # Popular banco de dados
+npm run prisma:reset-local # Reset local + seed (desenvolvimento)
 npm run prisma:studio     # Abrir Prisma Studio (GUI)
 ```
 
@@ -150,6 +153,9 @@ npm run prisma:studio     # Abrir Prisma Studio (GUI)
 ### Dashboard
 - `GET /api/dashboard/stats` - Estatísticas gerais
 - `GET /api/dashboard/teams` - Resumo por time
+
+### Health
+- `GET /api/health` - Health check da aplicação
 
 ## Eventos WebSocket
 

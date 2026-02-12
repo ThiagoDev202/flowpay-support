@@ -1,17 +1,21 @@
 import { Card, Skeleton } from '@components/ui'
-import { AgentResponseDto, TeamType } from '@types/index'
+import { AgentResponseDto, TeamType } from '@/types'
 import { ProgressBar } from 'primereact/progressbar'
 
 interface AgentWorkloadProps {
   agents: AgentResponseDto[]
   isLoading: boolean
+  onToggleStatus: (id: string, isOnline: boolean) => Promise<void>
+  isUpdatingAgent: boolean
 }
 
 interface AgentItemProps {
   agent: AgentResponseDto
+  onToggleStatus: (id: string, isOnline: boolean) => Promise<void>
+  isUpdatingAgent: boolean
 }
 
-function AgentItem({ agent }: AgentItemProps) {
+function AgentItem({ agent, onToggleStatus, isUpdatingAgent }: AgentItemProps) {
   const workloadPercentage = (agent.activeTicketsCount / agent.maxConcurrent) * 100
 
   const teamColorConfig: Record<TeamType, string> = {
@@ -71,11 +75,29 @@ function AgentItem({ agent }: AgentItemProps) {
           aria-label={`Carga de trabalho: ${workloadPercentage.toFixed(0)}%`}
         />
       </div>
+
+      <button
+        type="button"
+        onClick={() => void onToggleStatus(agent.id, !agent.isOnline)}
+        disabled={isUpdatingAgent}
+        className={`px-2 py-1 text-xs rounded ${
+          agent.isOnline
+            ? 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            : 'bg-blue-600 text-white hover:bg-blue-700'
+        } disabled:opacity-60`}
+      >
+        {agent.isOnline ? 'Offline' : 'Online'}
+      </button>
     </div>
   )
 }
 
-export function AgentWorkload({ agents, isLoading }: AgentWorkloadProps) {
+export function AgentWorkload({
+  agents,
+  isLoading,
+  onToggleStatus,
+  isUpdatingAgent,
+}: AgentWorkloadProps) {
   if (isLoading) {
     return (
       <Card title="Carga de Trabalho dos Atendentes" subtitle="Capacidade individual">
@@ -110,7 +132,14 @@ export function AgentWorkload({ agents, isLoading }: AgentWorkloadProps) {
     >
       <div className="space-y-3 max-h-96 overflow-y-auto">
         {sortedAgents.length > 0 ? (
-          sortedAgents.map((agent) => <AgentItem key={agent.id} agent={agent} />)
+          sortedAgents.map((agent) => (
+            <AgentItem
+              key={agent.id}
+              agent={agent}
+              onToggleStatus={onToggleStatus}
+              isUpdatingAgent={isUpdatingAgent}
+            />
+          ))
         ) : (
           <div className="text-center py-8">
             <i className="pi pi-users text-4xl text-gray-300 mb-2"></i>

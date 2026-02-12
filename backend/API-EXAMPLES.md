@@ -266,16 +266,22 @@ Content-Type: application/json
   "id": "750e8400-e29b-41d4-a716-446655440001",
   "customerName": "Carlos Pereira",
   "subject": "CARD_PROBLEM",
-  "status": "WAITING",
-  "agentId": null,
-  "agent": null,
+  "status": "IN_PROGRESS",
+  "agentId": "650e8400-e29b-41d4-a716-446655440001",
+  "agent": {
+    "id": "650e8400-e29b-41d4-a716-446655440001",
+    "name": "João Silva"
+  },
   "queuePosition": null,
-  "startedAt": null,
+  "startedAt": "2026-02-11T10:30:01.000Z",
   "completedAt": null,
   "createdAt": "2026-02-11T10:30:00.000Z",
   "updatedAt": "2026-02-11T10:30:00.000Z"
 }
 ```
+
+> Observação: ao criar um ticket, o sistema tenta atribuir imediatamente a um agente disponível.  
+> Se o time estiver lotado, o retorno virá com `status: WAITING`, `agent: null` e `queuePosition` preenchido.
 
 **Response (400 Bad Request) - Validação:**
 ```json
@@ -432,7 +438,96 @@ curl http://localhost:3000/api/tickets/750e8400-e29b-41d4-a716-446655440001
 
 ---
 
-## 4. Cenários de Uso Completos
+### 3.4 Completar ticket
+
+**Request:**
+```http
+PATCH /api/tickets/750e8400-e29b-41d4-a716-446655440001/complete
+```
+
+**Response (200 OK):**
+```json
+{
+  "id": "750e8400-e29b-41d4-a716-446655440001",
+  "customerName": "Carlos Pereira",
+  "subject": "CARD_PROBLEM",
+  "status": "COMPLETED",
+  "agentId": "650e8400-e29b-41d4-a716-446655440001",
+  "agent": {
+    "id": "650e8400-e29b-41d4-a716-446655440001",
+    "name": "João Silva"
+  },
+  "queuePosition": null,
+  "startedAt": "2026-02-11T10:30:01.000Z",
+  "completedAt": "2026-02-11T10:45:00.000Z",
+  "createdAt": "2026-02-11T10:30:00.000Z",
+  "updatedAt": "2026-02-11T10:45:00.000Z"
+}
+```
+
+**cURL:**
+```bash
+curl -X PATCH http://localhost:3000/api/tickets/750e8400-e29b-41d4-a716-446655440001/complete
+```
+
+---
+
+## 4. Dashboard e Health
+
+### 4.1 Estatísticas gerais
+
+```http
+GET /api/dashboard/stats
+```
+
+**Response (200 OK):**
+```json
+{
+  "totalTickets": 13,
+  "inProgress": 11,
+  "inQueue": 1,
+  "completed": 1,
+  "avgWaitTime": 0
+}
+```
+
+### 4.2 Resumo por times
+
+```http
+GET /api/dashboard/teams
+```
+
+**Response (200 OK):**
+```json
+[
+  {
+    "teamId": "613a2db0-ba96-41a3-895d-76a3b1ada05e",
+    "teamName": "Time Cartões",
+    "teamType": "CARDS",
+    "activeTickets": 9,
+    "queueSize": 1,
+    "availableAgents": 0,
+    "totalAgents": 3
+  }
+]
+```
+
+### 4.3 Health check
+
+```http
+GET /api/health
+```
+
+**Response (200 OK):**
+```json
+{
+  "status": "ok",
+  "timestamp": "2026-02-12T20:00:00.000Z"
+}
+```
+
+---
+## 5. Cenários de Uso Completos
 
 ### Cenário 1: Criar ticket e verificar status
 
@@ -511,7 +606,7 @@ curl http://localhost:3000/api/tickets | jq 'length'
 
 ---
 
-## 5. Casos de Erro
+## 6. Casos de Erro
 
 ### Erro 1: Nome do cliente muito curto
 
@@ -573,7 +668,7 @@ curl http://localhost:3000/api/teams/00000000-0000-0000-0000-000000000000
 
 ---
 
-## 6. Testes com Postman
+## 7. Testes com Postman
 
 ### Importar Collection
 
@@ -738,4 +833,3 @@ updateAgentStatus('agent-id-aqui', false);
 ```
 
 ---
-

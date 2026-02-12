@@ -13,7 +13,8 @@ import type {
   QueueUpdatedEvent,
   AgentStatusChangedEvent,
   DashboardStatsEvent,
-} from '@types/index'
+  CreateTicketDto,
+} from '@/types'
 
 export function useDashboard() {
   const { isConnected, on, off } = useSocket()
@@ -23,6 +24,9 @@ export function useDashboard() {
   const [teams, setTeams] = useState<TeamSummaryDto[]>([])
   const [tickets, setTickets] = useState<TicketResponseDto[]>([])
   const [agents, setAgents] = useState<AgentResponseDto[]>([])
+  const [isSubmittingTicket, setIsSubmittingTicket] = useState(false)
+  const [isUpdatingTicket, setIsUpdatingTicket] = useState(false)
+  const [isUpdatingAgent, setIsUpdatingAgent] = useState(false)
 
   // Query para buscar stats iniciais
   const statsQuery = useQuery({
@@ -34,11 +38,7 @@ export function useDashboard() {
   // Query para buscar teams summary
   const teamsQuery = useQuery({
     queryKey: ['dashboard', 'teams'],
-    queryFn: async () => {
-      const response = await fetch('http://localhost:3000/api/dashboard/teams')
-      if (!response.ok) throw new Error('Failed to fetch teams')
-      return response.json() as Promise<TeamSummaryDto[]>
-    },
+    queryFn: ApiService.getDashboardTeams,
     refetchInterval: 30000,
   })
 
@@ -144,7 +144,7 @@ export function useDashboard() {
       console.log('[useDashboard] queue:updated', event)
       setTeams((prev) =>
         prev.map((team) =>
-          team.type === event.teamType ? { ...team, queueSize: event.queueSize } : team
+          team.teamType === event.teamType ? { ...team, queueSize: event.queueSize } : team
         )
       )
     }
@@ -190,6 +190,36 @@ export function useDashboard() {
     agentsQuery.refetch()
   }
 
+  const createTicket = async (ticketData: CreateTicketDto) => {
+    setIsSubmittingTicket(true)
+    try {
+      await ApiService.createTicket(ticketData)
+      refetch()
+    } finally {
+      setIsSubmittingTicket(false)
+    }
+  }
+
+  const completeTicket = async (id: string) => {
+    setIsUpdatingTicket(true)
+    try {
+      await ApiService.completeTicket(id)
+      refetch()
+    } finally {
+      setIsUpdatingTicket(false)
+    }
+  }
+
+  const updateAgentStatus = async (id: string, isOnline: boolean) => {
+    setIsUpdatingAgent(true)
+    try {
+      await ApiService.updateAgentStatus(id, isOnline)
+      refetch()
+    } finally {
+      setIsUpdatingAgent(false)
+    }
+  }
+
   return {
     stats,
     teams,
@@ -206,6 +236,12 @@ export function useDashboard() {
       teamsQuery.isError ||
       ticketsQuery.isError ||
       agentsQuery.isError,
+    isSubmittingTicket,
+    isUpdatingTicket,
+    isUpdatingAgent,
+    createTicket,
+    completeTicket,
+    updateAgentStatus,
     refetch,
   }
 }

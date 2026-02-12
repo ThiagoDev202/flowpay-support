@@ -38,8 +38,7 @@ export class DashboardController {
   @Get('teams')
   @ApiOperation({
     summary: 'Obter resumo dos times',
-    description:
-      'Retorna status de cada time: tickets ativos, fila, agentes disponíveis',
+    description: 'Retorna status de cada time: tickets ativos, fila, agentes disponíveis',
   })
   @ApiResponse({
     status: 200,

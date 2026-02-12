@@ -5,11 +5,17 @@ import type {
   AgentResponseDto,
   TeamResponseDto,
   DashboardStatsDto,
-} from '@types/index'
+  TeamSummaryDto,
+} from '@/types'
 
 export class ApiService {
   static async getDashboardStats(): Promise<DashboardStatsDto> {
     const { data } = await api.get<DashboardStatsDto>('/dashboard/stats')
+    return data
+  }
+
+  static async getDashboardTeams(): Promise<TeamSummaryDto[]> {
+    const { data } = await api.get<TeamSummaryDto[]>('/dashboard/teams')
     return data
   }
 
@@ -66,8 +72,13 @@ export class ApiService {
   }
 
   static async getQueueByTeam(teamType: string): Promise<TicketResponseDto[]> {
-    const { data } = await api.get<TicketResponseDto[]>('/tickets/queue', {
-      params: { teamType },
+    const subjectByTeam: Record<string, string> = {
+      CARDS: 'CARD_PROBLEM',
+      LOANS: 'LOAN_REQUEST',
+      OTHER: 'OTHER',
+    }
+    const { data } = await api.get<TicketResponseDto[]>('/tickets', {
+      params: { status: 'WAITING', subject: subjectByTeam[teamType] || 'OTHER' },
     })
     return data
   }

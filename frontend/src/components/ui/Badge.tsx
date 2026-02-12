@@ -1,4 +1,4 @@
-import { TicketStatus } from '@types/index'
+import { TicketStatus } from '@/types'
 
 interface BadgeProps {
   status: TicketStatus

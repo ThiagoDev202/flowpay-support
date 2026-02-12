@@ -6,6 +6,7 @@ import { AgentsModule } from './modules/agents/agents.module';
 import { TicketsModule } from './modules/tickets/tickets.module';
 import { QueueModule } from './modules/queue/queue.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { HealthModule } from './modules/health/health.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { DashboardModule } from './modules/dashboard/dashboard.module';
     AgentsModule,
     TicketsModule,
     DashboardModule,
+    HealthModule,
   ],
   controllers: [],
   providers: [],

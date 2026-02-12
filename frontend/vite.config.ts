@@ -37,7 +37,6 @@ export default defineConfig({
       output: {
         manualChunks: {
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'prime-vendor': ['primereact', 'primeicons', 'primeflex'],
           'query-vendor': ['@tanstack/react-query'],
         },
       },

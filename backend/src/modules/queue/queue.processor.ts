@@ -18,9 +18,7 @@ export class CardsQueueProcessor extends WorkerHost {
   }
 
   async process(job: Job<DistributeTicketJob>): Promise<void> {
-    this.logger.log(
-      `Processing job ${job.id} for ticket ${job.data.ticketId} (CARDS)`,
-    );
+    this.logger.log(`Processing job ${job.id} for ticket ${job.data.ticketId} (CARDS)`);
 
     try {
       await this.queueService.processQueueJob(job.data.ticketId);
@@ -41,9 +39,7 @@ export class LoansQueueProcessor extends WorkerHost {
   }
 
   async process(job: Job<DistributeTicketJob>): Promise<void> {
-    this.logger.log(
-      `Processing job ${job.id} for ticket ${job.data.ticketId} (LOANS)`,
-    );
+    this.logger.log(`Processing job ${job.id} for ticket ${job.data.ticketId} (LOANS)`);
 
     try {
       await this.queueService.processQueueJob(job.data.ticketId);
@@ -64,9 +60,7 @@ export class OtherQueueProcessor extends WorkerHost {
   }
 
   async process(job: Job<DistributeTicketJob>): Promise<void> {
-    this.logger.log(
-      `Processing job ${job.id} for ticket ${job.data.ticketId} (OTHER)`,
-    );
+    this.logger.log(`Processing job ${job.id} for ticket ${job.data.ticketId} (OTHER)`);
 
     try {
       await this.queueService.processQueueJob(job.data.ticketId);
@@ -79,8 +73,4 @@ export class OtherQueueProcessor extends WorkerHost {
 }
 
 // Export all processors as a single class for module registration
-export const QueueProcessor = [
-  CardsQueueProcessor,
-  LoansQueueProcessor,
-  OtherQueueProcessor,
-];
+export const QueueProcessor = [CardsQueueProcessor, LoansQueueProcessor, OtherQueueProcessor];

@@ -24,6 +24,39 @@ export class TicketsService {
     this.queueService.setGateway(this.gateway);
   }
 
+  private async emitLatestDashboardStats(): Promise<void> {
+    const [totalTickets, inProgress, inQueue, completed, completedTickets] = await Promise.all([
+      this.prisma.ticket.count(),
+      this.prisma.ticket.count({ where: { status: TicketStatus.IN_PROGRESS } }),
+      this.prisma.ticket.count({ where: { status: TicketStatus.WAITING } }),
+      this.prisma.ticket.count({ where: { status: TicketStatus.COMPLETED } }),
+      this.prisma.ticket.findMany({
+        where: {
+          status: TicketStatus.COMPLETED,
+          startedAt: { not: null },
+        },
+        select: { createdAt: true, startedAt: true },
+      }),
+    ]);
+
+    let avgWaitTime = 0;
+    if (completedTickets.length > 0) {
+      const totalWaitTime = completedTickets.reduce((sum, ticket) => {
+        const startedAt = ticket.startedAt?.getTime() ?? ticket.createdAt.getTime();
+        return sum + (startedAt - ticket.createdAt.getTime());
+      }, 0);
+      avgWaitTime = Math.round((totalWaitTime / completedTickets.length / 1000) * 10) / 10;
+    }
+
+    this.gateway.emitDashboardStats({
+      totalTickets,
+      inProgress,
+      inQueue,
+      completed,
+      avgWaitTime,
+    });
+  }
+
   async create(dto: CreateTicketDto): Promise<TicketResponseDto> {
     // Cria o ticket com status WAITING
     const ticket = await this.prisma.ticket.create({
@@ -80,6 +113,7 @@ export class TicketsService {
 
     // Emite evento WebSocket: ticket:created
     this.gateway.emitTicketCreated(ticketResponse);
+    await this.emitLatestDashboardStats();
 
     return ticketResponse;
   }
@@ -203,9 +237,7 @@ export class TicketsService {
 
     // Valida se o ticket tem um agente atribuído
     if (!ticket.agentId) {
-      throw new BadRequestException(
-        `Ticket ${id} não tem um agente atribuído`,
-      );
+      throw new BadRequestException(`Ticket ${id} não tem um agente atribuído`);
     }
 
     // Atualiza o ticket para COMPLETED
@@ -287,6 +319,7 @@ export class TicketsService {
 
     // Processa a fila do time para distribuir próximo ticket
     await this.queueService.processQueue(teamType);
+    await this.emitLatestDashboardStats();
 
     return ticketResponse;
   }

@@ -1,20 +1,5 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Patch,
-  Param,
-  Body,
-  Query,
-} from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiParam,
-  ApiBody,
-  ApiQuery,
-} from '@nestjs/swagger';
+import { Controller, Get, Post, Patch, Param, Body, Query } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody, ApiQuery } from '@nestjs/swagger';
 import { TicketsService } from './tickets.service';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { TicketResponseDto } from './dto/ticket-response.dto';
@@ -29,7 +14,7 @@ export class TicketsController {
   @ApiOperation({
     summary: 'Criar novo ticket',
     description:
-      'Cria um novo ticket com status WAITING. A distribuição automática será implementada no MILESTONE 3.',
+      'Cria um novo ticket e distribui automaticamente para um agente disponível. Quando o time está lotado, o ticket permanece em WAITING na fila.',
   })
   @ApiBody({
     type: CreateTicketDto,
@@ -144,8 +129,7 @@ export class TicketsController {
   })
   @ApiResponse({
     status: 400,
-    description:
-      'Ticket não está em progresso ou não tem agente atribuído',
+    description: 'Ticket não está em progresso ou não tem agente atribuído',
   })
   @ApiResponse({
     status: 404,

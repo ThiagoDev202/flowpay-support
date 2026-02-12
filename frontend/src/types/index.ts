@@ -75,9 +75,9 @@ export interface DashboardStatsDto {
 }
 
 export interface TeamSummaryDto {
-  id: string
-  name: string
-  type: TeamType
+  teamId: string
+  teamName: string
+  teamType: TeamType
   activeTickets: number
   queueSize: number
   availableAgents: number

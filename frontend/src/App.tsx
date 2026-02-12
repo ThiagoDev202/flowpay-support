@@ -1,3 +1,4 @@
+import { FormEvent, useState } from 'react'
 import { Header } from '@components/layout/Header'
 import { PageContainer } from '@components/layout/PageContainer'
 import { RealTimeIndicator } from '@components/dashboard/RealTimeIndicator'
@@ -7,9 +8,39 @@ import { QueueChart } from '@components/dashboard/QueueChart'
 import { AgentWorkload } from '@components/dashboard/AgentWorkload'
 import { RecentTickets } from '@components/dashboard/RecentTickets'
 import { useDashboard } from '@hooks/useDashboard'
+import { TicketSubject } from '@/types'
 
 export function App() {
-  const { stats, teams, tickets, agents, isConnected, isLoading, refetch } = useDashboard()
+  const {
+    stats,
+    teams,
+    tickets,
+    agents,
+    isConnected,
+    isLoading,
+    isSubmittingTicket,
+    isUpdatingTicket,
+    isUpdatingAgent,
+    createTicket,
+    completeTicket,
+    updateAgentStatus,
+    refetch,
+  } = useDashboard()
+  const [customerName, setCustomerName] = useState('')
+  const [subject, setSubject] = useState<TicketSubject>(TicketSubject.CARD_PROBLEM)
+
+  const handleCreateTicket = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    if (customerName.trim().length < 3) return
+
+    await createTicket({
+      customerName: customerName.trim(),
+      subject,
+    })
+
+    setCustomerName('')
+    setSubject(TicketSubject.CARD_PROBLEM)
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -47,6 +78,39 @@ export function App() {
               <TeamOverview teams={teams} isLoading={isLoading} />
             </section>
 
+            <section aria-label="Criar ticket">
+              <div className="bg-white border border-gray-200 rounded-xl p-4">
+                <h2 className="text-lg font-semibold text-gray-900 mb-3">
+                  Criar Novo Ticket
+                </h2>
+                <form onSubmit={(event) => void handleCreateTicket(event)} className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                  <input
+                    type="text"
+                    value={customerName}
+                    onChange={(e) => setCustomerName(e.target.value)}
+                    placeholder="Nome do cliente"
+                    className="md:col-span-2 px-3 py-2 border border-gray-300 rounded-lg"
+                  />
+                  <select
+                    value={subject}
+                    onChange={(e) => setSubject(e.target.value as TicketSubject)}
+                    className="px-3 py-2 border border-gray-300 rounded-lg bg-white"
+                  >
+                    <option value={TicketSubject.CARD_PROBLEM}>Problema com cartão</option>
+                    <option value={TicketSubject.LOAN_REQUEST}>Contratação de empréstimo</option>
+                    <option value={TicketSubject.OTHER}>Outros assuntos</option>
+                  </select>
+                  <button
+                    type="submit"
+                    disabled={isSubmittingTicket}
+                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-60"
+                  >
+                    {isSubmittingTicket ? 'Criando...' : 'Criar Ticket'}
+                  </button>
+                </form>
+              </div>
+            </section>
+
             {/* Charts and Tables Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Queue Chart */}
@@ -56,13 +120,23 @@ export function App() {
 
               {/* Agent Workload */}
               <section aria-label="Carga de trabalho dos atendentes">
-                <AgentWorkload agents={agents} isLoading={isLoading} />
+                <AgentWorkload
+                  agents={agents}
+                  isLoading={isLoading}
+                  onToggleStatus={updateAgentStatus}
+                  isUpdatingAgent={isUpdatingAgent}
+                />
               </section>
             </div>
 
             {/* Recent Tickets */}
             <section aria-label="Tickets recentes">
-              <RecentTickets tickets={tickets} isLoading={isLoading} />
+              <RecentTickets
+                tickets={tickets}
+                isLoading={isLoading}
+                onCompleteTicket={completeTicket}
+                isUpdatingTicket={isUpdatingTicket}
+              />
             </section>
           </div>
         </PageContainer>

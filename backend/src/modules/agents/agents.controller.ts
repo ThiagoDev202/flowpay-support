@@ -1,11 +1,5 @@
 import { Controller, Get, Param, Patch, Body } from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiParam,
-  ApiBody,
-} from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
 import { AgentsService } from './agents.service';
 import { AgentResponseDto } from './dto/agent-response.dto';
 import { UpdateAgentStatusDto } from './dto/update-agent-status.dto';
@@ -18,8 +12,7 @@ export class AgentsController {
   @Get()
   @ApiOperation({
     summary: 'Listar todos os agentes',
-    description:
-      'Retorna todos os agentes com informações do time e tickets ativos',
+    description: 'Retorna todos os agentes com informações do time e tickets ativos',
   })
   @ApiResponse({
     status: 200,

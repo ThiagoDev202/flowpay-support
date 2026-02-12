@@ -81,10 +81,7 @@ export class AgentsService {
     };
   }
 
-  async updateStatus(
-    id: string,
-    dto: UpdateAgentStatusDto,
-  ): Promise<AgentResponseDto> {
+  async updateStatus(id: string, dto: UpdateAgentStatusDto): Promise<AgentResponseDto> {
     const agent = await this.prisma.agent.findUnique({
       where: { id },
     });
@@ -126,10 +123,7 @@ export class AgentsService {
     };
 
     // Emite evento WebSocket: agent:status-changed
-    this.gateway.emitAgentStatusChanged(
-      agentResponse,
-      updatedAgent.currentTickets.length,
-    );
+    this.gateway.emitAgentStatusChanged(agentResponse, updatedAgent.currentTickets.length);
 
     return agentResponse;
   }

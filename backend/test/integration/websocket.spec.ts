@@ -263,9 +263,7 @@ describe('WebSocket Integration Tests (e2e)', () => {
 
   describe('Dashboard Endpoints', () => {
     it('GET /api/dashboard/stats deve retornar dados corretos', async () => {
-      const response = await request(app.getHttpServer())
-        .get('/api/dashboard/stats')
-        .expect(200);
+      const response = await request(app.getHttpServer()).get('/api/dashboard/stats').expect(200);
 
       expect(response.body).toHaveProperty('totalTickets');
       expect(response.body).toHaveProperty('inProgress');
@@ -277,9 +275,7 @@ describe('WebSocket Integration Tests (e2e)', () => {
     });
 
     it('GET /api/dashboard/teams deve retornar 3 times', async () => {
-      const response = await request(app.getHttpServer())
-        .get('/api/dashboard/teams')
-        .expect(200);
+      const response = await request(app.getHttpServer()).get('/api/dashboard/teams').expect(200);
 
       expect(Array.isArray(response.body)).toBe(true);
       expect(response.body.length).toBeGreaterThanOrEqual(2);

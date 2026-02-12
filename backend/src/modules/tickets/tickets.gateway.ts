@@ -30,9 +30,7 @@ import { AgentResponseDto } from '@/modules/agents/dto/agent-response.dto';
   },
   namespace: '/ws',
 })
-export class TicketsGateway
-  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
-{
+export class TicketsGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
 
@@ -80,47 +78,35 @@ export class TicketsGateway
     };
 
     this.emitToAll('ticket:created', event);
-    this.logger.log(
-      `Ticket created event emitted: ${ticket.id} (${ticket.subject})`,
-    );
+    this.logger.log(`Ticket created event emitted: ${ticket.id} (${ticket.subject})`);
   }
 
   /**
    * Tarefa 4.2: Evento ticket:assigned
    * Emitido quando um ticket é atribuído a um agente
    */
-  emitTicketAssigned(
-    ticket: TicketResponseDto,
-    agent: AgentResponseDto,
-  ): void {
+  emitTicketAssigned(ticket: TicketResponseDto, agent: AgentResponseDto): void {
     const event: TicketAssignedEvent = {
       ticket,
       agent,
     };
 
     this.emitToAll('ticket:assigned', event);
-    this.logger.log(
-      `Ticket assigned event emitted: ${ticket.id} → Agent ${agent.name}`,
-    );
+    this.logger.log(`Ticket assigned event emitted: ${ticket.id} → Agent ${agent.name}`);
   }
 
   /**
    * Tarefa 4.3: Evento ticket:completed
    * Emitido quando um ticket é completado
    */
-  emitTicketCompleted(
-    ticket: TicketResponseDto,
-    agent: AgentResponseDto,
-  ): void {
+  emitTicketCompleted(ticket: TicketResponseDto, agent: AgentResponseDto): void {
     const event: TicketCompletedEvent = {
       ticket,
       agent,
     };
 
     this.emitToAll('ticket:completed', event);
-    this.logger.log(
-      `Ticket completed event emitted: ${ticket.id} by Agent ${agent.name}`,
-    );
+    this.logger.log(`Ticket completed event emitted: ${ticket.id} by Agent ${agent.name}`);
   }
 
   /**
@@ -134,9 +120,7 @@ export class TicketsGateway
     };
 
     this.emitToAll('queue:updated', event);
-    this.logger.log(
-      `Queue updated event emitted: ${teamType} queue size = ${queueSize}`,
-    );
+    this.logger.log(`Queue updated event emitted: ${teamType} queue size = ${queueSize}`);
   }
 
   /**
@@ -165,8 +149,6 @@ export class TicketsGateway
     };
 
     this.emitToAll('dashboard:stats', event);
-    this.logger.debug(
-      `Dashboard stats event emitted: ${stats.totalTickets} total tickets`,
-    );
+    this.logger.debug(`Dashboard stats event emitted: ${stats.totalTickets} total tickets`);
   }
 }

@@ -53,8 +53,7 @@ export class DashboardService {
       let avgWaitTime = 0;
       if (completedTickets.length > 0) {
         const totalWaitTime = completedTickets.reduce((sum, ticket) => {
-          const waitTime =
-            ticket.startedAt.getTime() - ticket.createdAt.getTime();
+          const waitTime = ticket.startedAt.getTime() - ticket.createdAt.getTime();
           return sum + waitTime;
         }, 0);
 
@@ -130,9 +129,7 @@ export class DashboardService {
 
           // Conta agentes disponíveis (com < maxConcurrent tickets ativos e online)
           const availableAgents = team.agents.filter(
-            (agent) =>
-              agent.isOnline &&
-              agent.currentTickets.length < agent.maxConcurrent,
+            (agent) => agent.isOnline && agent.currentTickets.length < agent.maxConcurrent,
           ).length;
 
           // Total de agentes no time
@@ -152,9 +149,7 @@ export class DashboardService {
         }),
       );
 
-      this.logger.debug(
-        `Teams summary calculated: ${teamsSummary.length} teams`,
-      );
+      this.logger.debug(`Teams summary calculated: ${teamsSummary.length} teams`);
 
       return teamsSummary;
     } catch (error) {

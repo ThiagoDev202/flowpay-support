@@ -1,5 +1,5 @@
 import { Card, Skeleton } from '@components/ui'
-import { TeamSummaryDto, TeamType } from '@types/index'
+import { TeamSummaryDto, TeamType } from '@/types'
 
 interface TeamOverviewProps {
   teams: TeamSummaryDto[]
@@ -30,7 +30,7 @@ function TeamCard({ team }: TeamCardProps) {
   }
 
   const config =
-    (team.type && teamConfig[team.type as TeamType]) || {
+    (team.teamType && teamConfig[team.teamType as TeamType]) || {
       color: 'text-gray-700',
       bgColor: 'bg-gray-50',
       icon: 'pi pi-users',
@@ -46,8 +46,8 @@ function TeamCard({ team }: TeamCardProps) {
               <i className={`${config.icon} text-xl ${config.color}`} aria-hidden="true"></i>
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-gray-900">{team.name}</h3>
-              <p className="text-sm text-gray-500">Time {team.type}</p>
+              <h3 className="text-lg font-semibold text-gray-900">{team.teamName}</h3>
+              <p className="text-sm text-gray-500">Time {team.teamType}</p>
             </div>
           </div>
         </div>
@@ -128,7 +128,7 @@ export function TeamOverview({ teams, isLoading }: TeamOverviewProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {teams.map((team, index) => (
-        <TeamCard key={team.id || `${team.type}-${index}`} team={team} />
+        <TeamCard key={team.teamId || `${team.teamType}-${index}`} team={team} />
       ))}
     </div>
   )

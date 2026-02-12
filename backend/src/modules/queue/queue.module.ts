@@ -2,11 +2,7 @@ import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bullmq';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { QueueService } from './queue.service';
-import {
-  CardsQueueProcessor,
-  LoansQueueProcessor,
-  OtherQueueProcessor,
-} from './queue.processor';
+import { CardsQueueProcessor, LoansQueueProcessor, OtherQueueProcessor } from './queue.processor';
 import { DatabaseModule } from '@/database/database.module';
 
 @Module({
@@ -35,12 +31,7 @@ import { DatabaseModule } from '@/database/database.module';
       },
     ),
   ],
-  providers: [
-    QueueService,
-    CardsQueueProcessor,
-    LoansQueueProcessor,
-    OtherQueueProcessor,
-  ],
+  providers: [QueueService, CardsQueueProcessor, LoansQueueProcessor, OtherQueueProcessor],
   exports: [QueueService, BullModule],
 })
 export class QueueModule {}

@@ -1,5 +1,5 @@
 import { Card, Skeleton } from '@components/ui'
-import { TeamSummaryDto } from '@types/index'
+import { TeamSummaryDto } from '@/types'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { useEffect, useState } from 'react'
 
@@ -26,9 +26,9 @@ export function QueueChart({ teams, isLoading }: QueueChartProps) {
 
     const newDataPoint: QueueDataPoint = {
       time: timeString,
-      cards: teams.find((t) => t.type === 'CARDS')?.queueSize || 0,
-      loans: teams.find((t) => t.type === 'LOANS')?.queueSize || 0,
-      other: teams.find((t) => t.type === 'OTHER')?.queueSize || 0,
+      cards: teams.find((t) => t.teamType === 'CARDS')?.queueSize || 0,
+      loans: teams.find((t) => t.teamType === 'LOANS')?.queueSize || 0,
+      other: teams.find((t) => t.teamType === 'OTHER')?.queueSize || 0,
     }
 
     setQueueHistory((prev) => {

@@ -1,10 +1,34 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, Logger } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
+function validateEnvironment(): void {
+  if (process.env.NODE_ENV === 'test') {
+    return;
+  }
+
+  const requiredVars = ['DATABASE_URL', 'REDIS_HOST'];
+  const missingVars = requiredVars.filter((name) => !process.env[name]);
+
+  if (missingVars.length > 0) {
+    throw new Error(`Missing required environment variables: ${missingVars.join(', ')}`);
+  }
+
+  if (process.env.REDIS_PORT && Number.isNaN(Number(process.env.REDIS_PORT))) {
+    throw new Error('REDIS_PORT must be a number');
+  }
+
+  if (process.env.API_PORT && Number.isNaN(Number(process.env.API_PORT))) {
+    throw new Error('API_PORT must be a number');
+  }
+}
+
 async function bootstrap() {
+  validateEnvironment();
+
   const app = await NestFactory.create(AppModule);
+  const logger = new Logger('HTTP');
 
   // CORS Configuration
   app.enableCors({
@@ -29,6 +53,24 @@ async function bootstrap() {
       },
     }),
   );
+
+  // Structured HTTP logs for easier troubleshooting
+  app.use((req, res, next) => {
+    const startedAt = Date.now();
+
+    res.on('finish', () => {
+      logger.log(
+        JSON.stringify({
+          method: req.method,
+          path: req.originalUrl || req.url,
+          statusCode: res.statusCode,
+          durationMs: Date.now() - startedAt,
+        }),
+      );
+    });
+
+    next();
+  });
 
   // API Prefix
   app.setGlobalPrefix('api');

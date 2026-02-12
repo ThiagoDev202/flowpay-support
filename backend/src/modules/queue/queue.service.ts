@@ -80,9 +80,7 @@ export class QueueService {
       }
 
       // Ordena por carga (menor para maior) e retorna o primeiro
-      availableAgents.sort(
-        (a, b) => a.currentTickets.length - b.currentTickets.length,
-      );
+      availableAgents.sort((a, b) => a.currentTickets.length - b.currentTickets.length);
 
       const selectedAgent = availableAgents[0];
       this.logger.log(
@@ -120,9 +118,7 @@ export class QueueService {
         },
       });
 
-      this.logger.log(
-        `Ticket ${ticketId} assigned to agent ${ticket.agent.name}`,
-      );
+      this.logger.log(`Ticket ${ticketId} assigned to agent ${ticket.agent.name}`);
 
       // Emite evento WebSocket: ticket:assigned
       if (this.gateway && ticket.agent) {
@@ -289,9 +285,7 @@ export class QueueService {
       if (agent) {
         // Se há agente disponível, atribui o ticket
         await this.assignTicketToAgent(ticketId, agent.id);
-        this.logger.log(
-          `Ticket ${ticketId} distributed to agent ${agent.name}`,
-        );
+        this.logger.log(`Ticket ${ticketId} distributed to agent ${agent.name}`);
       } else {
         // Se não há agente disponível, enfileira
         await this.enqueueTicket(ticketId, teamType);
@@ -321,9 +315,7 @@ export class QueueService {
         }
 
         await this.assignTicketToAgent(ticket.id, agent.id);
-        this.logger.log(
-          `Assigned ticket ${ticket.id} to agent ${agent.name} from queue`,
-        );
+        this.logger.log(`Assigned ticket ${ticket.id} to agent ${agent.name} from queue`);
 
         // Atualiza as posições na fila
         await this.updateQueuePositions(teamType);
@@ -361,9 +353,7 @@ export class QueueService {
 
       // Se o ticket já foi atribuído, não faz nada
       if (ticket.status !== TicketStatus.WAITING) {
-        this.logger.log(
-          `Ticket ${ticketId} already processed (status: ${ticket.status})`,
-        );
+        this.logger.log(`Ticket ${ticketId} already processed (status: ${ticket.status})`);
         return;
       }
 
@@ -372,13 +362,9 @@ export class QueueService {
 
       if (agent) {
         await this.assignTicketToAgent(ticketId, agent.id);
-        this.logger.log(
-          `Job processed: Ticket ${ticketId} assigned to agent ${agent.name}`,
-        );
+        this.logger.log(`Job processed: Ticket ${ticketId} assigned to agent ${agent.name}`);
       } else {
-        this.logger.log(
-          `No available agent for ticket ${ticketId}, will retry later`,
-        );
+        this.logger.log(`No available agent for ticket ${ticketId}, will retry later`);
       }
     } catch (error) {
       this.logger.error(`Error processing queue job: ${error.message}`);

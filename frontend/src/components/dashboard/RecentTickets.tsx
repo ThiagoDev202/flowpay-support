@@ -1,5 +1,5 @@
 import { Card, Badge, Skeleton } from '@components/ui'
-import { TicketResponseDto, TicketSubject } from '@types/index'
+import { TicketResponseDto, TicketSubject } from '@/types'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import { formatDistanceToNow } from 'date-fns'
@@ -8,9 +8,16 @@ import { ptBR } from 'date-fns/locale'
 interface RecentTicketsProps {
   tickets: TicketResponseDto[]
   isLoading: boolean
+  onCompleteTicket: (id: string) => Promise<void>
+  isUpdatingTicket: boolean
 }
 
-export function RecentTickets({ tickets, isLoading }: RecentTicketsProps) {
+export function RecentTickets({
+  tickets,
+  isLoading,
+  onCompleteTicket,
+  isUpdatingTicket,
+}: RecentTicketsProps) {
   const subjectLabels: Record<TicketSubject, string> = {
     CARD_PROBLEM: 'Problema com Cartão',
     LOAN_REQUEST: 'Solicitação de Empréstimo',
@@ -60,6 +67,23 @@ export function RecentTickets({ tickets, isLoading }: RecentTicketsProps) {
       <span className="text-xs text-gray-500" title={date.toLocaleString('pt-BR')}>
         {timeAgo}
       </span>
+    )
+  }
+
+  const actionsTemplate = (ticket: TicketResponseDto) => {
+    if (ticket.status !== 'IN_PROGRESS') {
+      return <span className="text-xs text-gray-400">-</span>
+    }
+
+    return (
+      <button
+        type="button"
+        onClick={() => void onCompleteTicket(ticket.id)}
+        disabled={isUpdatingTicket}
+        className="px-2 py-1 text-xs rounded bg-green-600 text-white hover:bg-green-700 disabled:opacity-60"
+      >
+        Concluir
+      </button>
     )
   }
 
@@ -125,6 +149,11 @@ export function RecentTickets({ tickets, isLoading }: RecentTicketsProps) {
             header="Tempo"
             body={timeTemplate}
             style={{ minWidth: '140px' }}
+          />
+          <Column
+            header="Ações"
+            body={actionsTemplate}
+            style={{ minWidth: '110px' }}
           />
         </DataTable>
       ) : (

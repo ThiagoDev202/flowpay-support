@@ -140,21 +140,13 @@ describe('QueueService', () => {
           id: 'agent-1',
           name: 'Agent 1',
           maxConcurrent: 3,
-          currentTickets: [
-            { id: 'ticket-1' },
-            { id: 'ticket-2' },
-            { id: 'ticket-3' },
-          ],
+          currentTickets: [{ id: 'ticket-1' }, { id: 'ticket-2' }, { id: 'ticket-3' }],
         },
         {
           id: 'agent-2',
           name: 'Agent 2',
           maxConcurrent: 3,
-          currentTickets: [
-            { id: 'ticket-4' },
-            { id: 'ticket-5' },
-            { id: 'ticket-6' },
-          ],
+          currentTickets: [{ id: 'ticket-4' }, { id: 'ticket-5' }, { id: 'ticket-6' }],
         },
       ];
 
