@@ -1,6 +1,5 @@
 import { Header } from '@components/layout/Header'
 import { PageContainer } from '@components/layout/PageContainer'
-import { RealTimeIndicator } from '@components/dashboard/RealTimeIndicator'
 import { StatsCards } from '@components/dashboard/StatsCards'
 import { TeamOverview } from '@components/dashboard/TeamOverview'
 import { QueueChart } from '@components/dashboard/QueueChart'
@@ -38,14 +37,12 @@ export function App() {
                 <p className="text-slate-600 mt-1 text-base font-medium">Acompanhamento em tempo real</p>
               </div>
               <div className="flex items-center gap-3 flex-wrap">
-                <RealTimeIndicator isConnected={isConnected} />
                 <Button
                   onClick={refetch}
                   label="Atualizar"
-                  icon="pi pi-refresh"
                   severity="secondary"
                   outlined
-                  className="!px-4 !py-2 !font-semibold !rounded-lg !border-slate-300 !text-slate-700"
+                  className="!h-10 !px-4 !rounded-lg !font-semibold !border-slate-300 !bg-white !text-slate-700 hover:!bg-slate-50 hover:!border-slate-400 hover:!text-slate-900 !shadow-sm !transition-colors"
                   aria-label="Atualizar dados"
                 />
               </div>
