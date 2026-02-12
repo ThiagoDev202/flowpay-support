@@ -26,9 +26,11 @@ export function Header({ isConnected = false }: HeaderProps) {
         <div className="min-h-[64px] flex items-center justify-between gap-4">
           <div className="flex items-center min-w-0">
             <Link to="/" className="flex items-center space-x-3">
-              <div className="bg-blue-600 text-white rounded-lg p-2">
-                <i className="pi pi-chart-line text-xl"></i>
-              </div>
+              <img
+                src="/ubots-icon.png"
+                alt="Ubots icon"
+                className="w-10 h-10 rounded-lg object-cover"
+              />
               <div>
                 <h1 className="text-xl font-semibold text-slate-900 tracking-tight">FlowPay</h1>
                 <p className="text-xs text-slate-500 font-medium">Dashboard em Tempo Real</p>
