@@ -1,4 +1,3 @@
-import { FormEvent, useState } from 'react'
 import { Header } from '@components/layout/Header'
 import { PageContainer } from '@components/layout/PageContainer'
 import { RealTimeIndicator } from '@components/dashboard/RealTimeIndicator'
@@ -8,7 +7,7 @@ import { QueueChart } from '@components/dashboard/QueueChart'
 import { AgentWorkload } from '@components/dashboard/AgentWorkload'
 import { RecentTickets } from '@components/dashboard/RecentTickets'
 import { useDashboard } from '@hooks/useDashboard'
-import { TicketSubject } from '@/types'
+import { Button } from 'primereact/button'
 
 export function App() {
   const {
@@ -18,108 +17,59 @@ export function App() {
     agents,
     isConnected,
     isLoading,
-    isSubmittingTicket,
     isUpdatingTicket,
     isUpdatingAgent,
-    createTicket,
     completeTicket,
     updateAgentStatus,
     refetch,
   } = useDashboard()
-  const [customerName, setCustomerName] = useState('')
-  const [subject, setSubject] = useState<TicketSubject>(TicketSubject.CARD_PROBLEM)
-
-  const handleCreateTicket = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    if (customerName.trim().length < 3) return
-
-    await createTicket({
-      customerName: customerName.trim(),
-      subject,
-    })
-
-    setCustomerName('')
-    setSubject(TicketSubject.CARD_PROBLEM)
-  }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-slate-100 flex flex-col">
       <Header isConnected={isConnected} />
 
       <main className="flex-1 w-full">
-        <PageContainer>
-          <div className="space-y-8">
+        <PageContainer maxWidth="7xl" className="w-full">
+          <div className="space-y-8 w-full">
             {/* Header Section */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-                <p className="text-gray-600 mt-1">Acompanhamento em tempo real</p>
+                <h1 className="text-3xl font-semibold text-slate-900 tracking-tight">Dashboard</h1>
+                <p className="text-slate-600 mt-1 text-base font-medium">Acompanhamento em tempo real</p>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3 flex-wrap">
                 <RealTimeIndicator isConnected={isConnected} />
-                <button
+                <Button
                   onClick={refetch}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  label="Atualizar"
+                  icon="pi pi-refresh"
+                  severity="secondary"
+                  outlined
+                  className="!px-4 !py-2 !font-semibold !rounded-lg !border-slate-300 !text-slate-700"
                   aria-label="Atualizar dados"
-                >
-                  <i className="pi pi-refresh"></i>
-                  <span>Atualizar</span>
-                </button>
+                />
               </div>
             </div>
 
             {/* Stats Cards */}
-            <section aria-label="Estatísticas principais">
+            <section aria-label="Estatísticas principais" className="w-full">
               <StatsCards stats={stats} isLoading={isLoading} />
             </section>
 
             {/* Team Overview */}
-            <section aria-label="Visão geral dos times">
+            <section aria-label="Visão geral dos times" className="w-full">
               <TeamOverview teams={teams} isLoading={isLoading} />
             </section>
 
-            <section aria-label="Criar ticket">
-              <div className="bg-white border border-gray-200 rounded-xl p-4">
-                <h2 className="text-lg font-semibold text-gray-900 mb-3">
-                  Criar Novo Ticket
-                </h2>
-                <form onSubmit={(event) => void handleCreateTicket(event)} className="grid grid-cols-1 md:grid-cols-4 gap-3">
-                  <input
-                    type="text"
-                    value={customerName}
-                    onChange={(e) => setCustomerName(e.target.value)}
-                    placeholder="Nome do cliente"
-                    className="md:col-span-2 px-3 py-2 border border-gray-300 rounded-lg"
-                  />
-                  <select
-                    value={subject}
-                    onChange={(e) => setSubject(e.target.value as TicketSubject)}
-                    className="px-3 py-2 border border-gray-300 rounded-lg bg-white"
-                  >
-                    <option value={TicketSubject.CARD_PROBLEM}>Problema com cartão</option>
-                    <option value={TicketSubject.LOAN_REQUEST}>Contratação de empréstimo</option>
-                    <option value={TicketSubject.OTHER}>Outros assuntos</option>
-                  </select>
-                  <button
-                    type="submit"
-                    disabled={isSubmittingTicket}
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-60"
-                  >
-                    {isSubmittingTicket ? 'Criando...' : 'Criar Ticket'}
-                  </button>
-                </form>
-              </div>
-            </section>
-
             {/* Charts and Tables Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="flex flex-col lg:flex-row gap-5 items-stretch w-full">
               {/* Queue Chart */}
-              <section aria-label="Gráfico de evolução da fila">
+              <section aria-label="Gráfico de evolução da fila" className="h-full w-full lg:flex-1 min-w-0">
                 <QueueChart teams={teams} isLoading={isLoading} />
               </section>
 
               {/* Agent Workload */}
-              <section aria-label="Carga de trabalho dos atendentes">
+              <section aria-label="Carga de trabalho dos atendentes" className="h-full w-full lg:flex-1 min-w-0">
                 <AgentWorkload
                   agents={agents}
                   isLoading={isLoading}
@@ -130,7 +80,7 @@ export function App() {
             </div>
 
             {/* Recent Tickets */}
-            <section aria-label="Tickets recentes">
+            <section aria-label="Tickets recentes" className="w-full">
               <RecentTickets
                 tickets={tickets}
                 isLoading={isLoading}

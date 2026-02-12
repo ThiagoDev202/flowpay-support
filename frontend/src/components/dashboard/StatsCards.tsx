@@ -19,7 +19,7 @@ interface StatCardProps {
 function StatCard({ title, value, icon, color, bgColor, isLoading }: StatCardProps) {
   if (isLoading) {
     return (
-      <Card className="h-full">
+      <Card className="h-[152px] w-full min-w-0">
         <div className="flex items-center justify-between">
           <div className="flex-1">
             <Skeleton height="h-4" width="w-24" className="mb-2" />
@@ -32,14 +32,14 @@ function StatCard({ title, value, icon, color, bgColor, isLoading }: StatCardPro
   }
 
   return (
-    <Card className="h-full hover:shadow-lg transition-shadow duration-200">
+    <Card className="h-[152px] w-full min-w-0 hover:shadow-lg transition-shadow duration-200">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
+          <p className="text-sm font-medium text-gray-600 mb-2">{title}</p>
           <p className={`text-3xl font-bold ${color}`}>{value}</p>
         </div>
-        <div className={`${bgColor} p-4 rounded-full`}>
-          <i className={`${icon} text-2xl ${color}`} aria-hidden="true"></i>
+        <div className={`${bgColor} w-12 h-12 rounded-full flex items-center justify-center`}>
+          <i className={`${icon} text-base ${color}`} aria-hidden="true"></i>
         </div>
       </div>
     </Card>
@@ -79,7 +79,7 @@ export function StatsCards({ stats, isLoading }: StatsCardsProps) {
   ]
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5 items-stretch">
       {cards.map((card, index) => (
         <StatCard
           key={index}

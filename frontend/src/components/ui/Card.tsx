@@ -12,16 +12,16 @@ export function Card({ children, className = '', title, subtitle, padding = 'md'
   const paddingStyles = {
     none: '',
     sm: 'p-4',
-    md: 'p-6',
+    md: 'p-5',
     lg: 'p-8',
   }
 
   return (
-    <div className={`bg-white rounded-lg shadow-md border border-gray-200 ${className}`}>
+    <div className={`bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden ${className}`}>
       {(title || subtitle) && (
-        <div className={`border-b border-gray-200 ${paddingStyles[padding]}`}>
-          {title && <h3 className="text-lg font-semibold text-gray-900">{title}</h3>}
-          {subtitle && <p className="text-sm text-gray-600 mt-1">{subtitle}</p>}
+        <div className={`border-b border-slate-200 ${paddingStyles[padding]}`}>
+          {title && <h3 className="text-xl font-semibold text-slate-800 tracking-tight">{title}</h3>}
+          {subtitle && <p className="text-sm text-slate-500 mt-1 font-medium">{subtitle}</p>}
         </div>
       )}
       <div className={paddingStyles[padding]}>{children}</div>

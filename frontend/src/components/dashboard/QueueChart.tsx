@@ -44,24 +44,25 @@ export function QueueChart({ teams, isLoading }: QueueChartProps) {
   if (isLoading) {
     return (
       <Card title="Evolução da Fila" subtitle="Últimos 20 pontos">
-        <div className="h-80 flex items-center justify-center">
-          <Skeleton height="h-64" className="w-full" />
+        <div className="h-[380px] flex items-center justify-center">
+          <Skeleton height="h-[340px]" className="w-full" />
         </div>
       </Card>
     )
   }
 
   return (
-    <Card title="Evolução da Fila" subtitle="Acompanhamento em tempo real">
-      <div className="h-80">
+    <Card title="Evolução da Fila" subtitle="Acompanhamento em tempo real" className="h-full">
+      <div className="h-[380px]">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={queueHistory}>
+          <LineChart data={queueHistory} margin={{ top: 10, right: 20, left: 0, bottom: 20 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
             <XAxis
               dataKey="time"
               stroke="#6b7280"
               fontSize={12}
               tickLine={false}
+              minTickGap={24}
             />
             <YAxis
               stroke="#6b7280"

@@ -129,8 +129,9 @@ export function AgentWorkload({
     <Card
       title="Carga de Trabalho dos Atendentes"
       subtitle={`${agents.filter((a) => a.isOnline).length} de ${agents.length} atendentes online`}
+      className="h-full"
     >
-      <div className="space-y-3 max-h-96 overflow-y-auto">
+      <div className="space-y-3 h-[380px] overflow-y-auto pr-1">
         {sortedAgents.length > 0 ? (
           sortedAgents.map((agent) => (
             <AgentItem

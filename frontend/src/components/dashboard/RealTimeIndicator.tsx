@@ -8,14 +8,14 @@ export function RealTimeIndicator({ isConnected, className = '' }: RealTimeIndic
 
   const statusConfig = {
     connected: {
-      icon: '🟢',
+      icon: 'pi pi-check-circle',
       label: 'Conectado',
       color: 'text-green-700',
       bgColor: 'bg-green-50',
       borderColor: 'border-green-200',
     },
     disconnected: {
-      icon: '🔴',
+      icon: 'pi pi-times-circle',
       label: 'Desconectado',
       color: 'text-red-700',
       bgColor: 'bg-red-50',
@@ -27,13 +27,11 @@ export function RealTimeIndicator({ isConnected, className = '' }: RealTimeIndic
 
   return (
     <div
-      className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg border ${config.bgColor} ${config.borderColor} ${className}`}
+      className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg border font-medium ${config.bgColor} ${config.borderColor} ${className}`}
       role="status"
       aria-live="polite"
     >
-      <span className="text-lg" aria-hidden="true">
-        {config.icon}
-      </span>
+      <i className={`${config.icon} text-base ${config.color}`} aria-hidden="true" />
       <span className={`text-sm font-medium ${config.color}`}>{config.label}</span>
       {isConnected && (
         <span className="relative flex h-2 w-2">

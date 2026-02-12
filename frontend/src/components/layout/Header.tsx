@@ -21,22 +21,22 @@ export function Header({ isConnected = false }: HeaderProps) {
   }
 
   return (
-    <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center">
+    <header className="bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm sticky top-0 z-50">
+      <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="min-h-[64px] flex items-center justify-between gap-4">
+          <div className="flex items-center min-w-0">
             <Link to="/" className="flex items-center space-x-3">
               <div className="bg-blue-600 text-white rounded-lg p-2">
                 <i className="pi pi-chart-line text-xl"></i>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">FlowPay</h1>
-                <p className="text-xs text-gray-500">Dashboard em Tempo Real</p>
+                <h1 className="text-xl font-semibold text-slate-900 tracking-tight">FlowPay</h1>
+                <p className="text-xs text-slate-500 font-medium">Dashboard em Tempo Real</p>
               </div>
             </Link>
           </div>
 
-          <nav className="flex items-center space-x-6">
+          <nav className="flex items-center justify-end gap-4 sm:gap-6">
             <div className="flex items-center space-x-2">
               <span
                 className={`inline-block w-2 h-2 rounded-full ${
@@ -44,12 +44,12 @@ export function Header({ isConnected = false }: HeaderProps) {
                 } animate-pulse`}
                 aria-label={isConnected ? 'Conectado' : 'Desconectado'}
               ></span>
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-slate-600 font-medium">
                 {isConnected ? 'Conectado' : 'Desconectado'}
               </span>
             </div>
 
-            <div className="flex items-center space-x-2 text-gray-600">
+            <div className="flex items-center space-x-2 text-slate-600">
               <i className="pi pi-clock text-sm"></i>
               <span className="text-sm font-mono">{formatTime(currentTime)}</span>
             </div>

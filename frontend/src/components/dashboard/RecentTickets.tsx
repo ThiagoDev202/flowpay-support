@@ -2,6 +2,7 @@ import { Card, Badge, Skeleton } from '@components/ui'
 import { TicketResponseDto, TicketSubject } from '@/types'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
+import { Button } from 'primereact/button'
 import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
@@ -76,14 +77,16 @@ export function RecentTickets({
     }
 
     return (
-      <button
+      <Button
         type="button"
+        label="Concluir"
+        size="small"
+        severity="success"
+        outlined
+        className="!px-3 !py-1.5 !border !border-emerald-300 !bg-emerald-50 !text-emerald-700 hover:!bg-emerald-100 hover:!border-emerald-400 hover:!shadow-sm !transition-all !duration-150"
         onClick={() => void onCompleteTicket(ticket.id)}
         disabled={isUpdatingTicket}
-        className="px-2 py-1 text-xs rounded bg-green-600 text-white hover:bg-green-700 disabled:opacity-60"
-      >
-        Concluir
-      </button>
+      />
     )
   }
 
@@ -117,7 +120,10 @@ export function RecentTickets({
           stripedRows
           showGridlines
           size="small"
-          className="text-sm"
+          className="text-sm p-datatable-sm"
+          responsiveLayout="scroll"
+          scrollable
+          scrollHeight="380px"
           emptyMessage="Nenhum ticket encontrado"
         >
           <Column
