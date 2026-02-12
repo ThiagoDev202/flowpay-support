@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TicketSubject {
+  CARD_PROBLEM        // Problemas com cartão
+  LOAN_REQUEST        // Contratação de empréstimo
+  OTHER               // Outros assuntos
+}
+
+enum TicketStatus {
+  WAITING             // Na fila
+  IN_PROGRESS         // Em atendimento
+  COMPLETED           // Finalizado
+}
+
+enum TeamType {
+  CARDS               // Time Cartões
+  LOANS               // Time Empréstimos
+  OTHER               // Time Outros Assuntos
+}
+
+model Team {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  type      TeamType @unique
+  agents    Agent[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("teams")
+}
+
+model Agent {
+  id               String   @id @default(uuid())
+  name             String
+  email            String   @unique
+  teamId           String   @map("team_id")
+  team             Team     @relation(fields: [teamId], references: [id])
+  maxConcurrent    Int      @default(3) @map("max_concurrent")
+  currentTickets   Ticket[] @relation("ActiveAgent")
+  completedTickets Ticket[] @relation("CompletedAgent")
+  isOnline         Boolean  @default(true) @map("is_online")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  @@map("agents")
+}
+
+model Ticket {
+  id            String        @id @default(uuid())
+  customerName  String        @map("customer_name")
+  subject       TicketSubject
+  status        TicketStatus  @default(WAITING)
+  agentId       String?       @map("agent_id")
+  agent         Agent?        @relation("ActiveAgent", fields: [agentId], references: [id])
+  completedById String?       @map("completed_by_id")
+  completedBy   Agent?        @relation("CompletedAgent", fields: [completedById], references: [id])
+  queuePosition Int?          @map("queue_position")
+  startedAt     DateTime?     @map("started_at")
+  completedAt   DateTime?     @map("completed_at")
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@index([subject])
+  @@index([agentId])
+  @@map("tickets")
+}
